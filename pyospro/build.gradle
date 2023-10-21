@@ -1,0 +1,43 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.16'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'com.phyho'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '11'
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+   implementation 'org.springframework.boot:spring-boot-starter-web' //기본 starter web
+   implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.0' // mybatis
+   
+   implementation 'javax.servlet:jstl:1.2'//jsp
+   implementation "org.apache.tomcat.embed:tomcat-embed-jasper"//tomcat사용하기
+   implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.8'
+   
+   compileOnly 'org.projectlombok:lombok' //lombok //compileOnly= 컴파일 시점에만 참여
+   developmentOnly 'org.springframework.boot:spring-boot-devtools' // 개발시만 사용
+   annotationProcessor 'org.projectlombok:lombok' // 어노테이셔으로 사용하기 위해 
+   implementation 'org.springframework.boot:spring-boot-starter-tomcat' //runtime시에만 필요, 실행환경에서 제공되는 dependency를 설정
+   testImplementation 'org.springframework.boot:spring-boot-starter-test'//test코드 수행때만 사용
+   	// json
+	implementation 'org.json:json:20230227'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
