@@ -9,68 +9,157 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
+<style>
+body{
+	margin: auto;
+	padding: 0;
+}
+
+table{
+	width: 80%;
+	height: 80%;
+}
+
+tr{
+	height: 60px;
+}
+
+</style>
+
 <script src="./js/jquery-3.7.0.min.js"></script>
 <script type="text/javascript">
 
-	$(function(){
-		
+
+	$(function() {
 		let lastScrollTop = 0;
+		let percent = 0;
 		
-		$(window).scroll(function(){
+		$(window).scroll(function() {
 
 			let currentScrollTop = $(window).scrollTop();
-			// 다운스크롤
-			if ( currentScrollTop - lastScrollTop > 0 ){
+			// 다운스크롤 이벤트 발생
+			if (currentScrollTop - lastScrollTop > 0) {
+				//console.log("down-scroll");
+				console.log("currentScrollTop : " + $(window).scrollTop()); // 194.99998474121094
+				console.log("lastScrollTop : " + lastScrollTop); 
+				//console.log($(document).height()-$(window).height());
+				
+				percent = ($(window).scrollTop() / ($(document).height() - $(window).height())) * 100;
+				console.log("percent : " + percent);
+				
+				if( percent > 97 ){
+					let addList = "";
+					let lastbno = $(".scrolling:last").attr("data-bno");
+					//console.log(lastbno);
+					
+					$.ajax({
+						url: './scrollDown',
+						type: 'post',
+						data: {bno : lastbno},
+						dataType: 'json',
+						success: function(data){
+							
+							if(data != ""){
+								//alert("와");
+								// 이제 여기다가 글을 더 뿌려
+								$(data).each(function(){
+									//console.log(this);			
+									//console.log(this.list[0].bno);
+									//console.log(typeof this.list[0].bno);	// number
+							 		
+									for(let i = 0; i<this.list.length; i++){
+										
+										addList +=	"<tr class=" + "'listToChange'" + ">" 
+										+	 	"<td class=" +  "'scrolling'" + " data-bno='" + this.list[i].bno +"'>"
+										+			this.list[i].bno
+										+		"</td>"
+										+		"<td class=" +  "title'>" + this.list[i].btitle + "</td>"		
+										+		"<td>" + this.list[i].m_name + "</td>"
+										+		"<td>" + this.list[i].bdate + "</td>"
+										+		"<td>" + this.list[i].blike + "</td>"
+								 		+ 	"</tr>";
+									}
+									
+								});	// each
+								
+								$(".listToChange").remove();	// 기존게시글 지우기
+								$(".scrollLocation").after(addList);	// 추가게시글 띄우기
+								
+								
+								let position = $(".listToChange:first").offset();
+								//console.log("Top: " + position.top);
+								window.scroll({
+									  top: position.top,
+									  left: 0,
+									  behavior: "smooth"
+									});
+								
+								percent = 0;
+								console.log("퍼센트 : " + percent);
+
+								
+							} // if (data != "")
+						}, // success
+						error : function(error){
+							//alert("에러남");
+						} // error
+						
+					});	// ajax
+
+
+				} // if	(percent > ~)
+				
 				lastScrollTop = currentScrollTop;
-			// 업스크롤
-			}	else {
-				lastScrollTop = currentScrollTop;
-			}
-			
-			
-			
-			
+				
+			}	// 다운스크롤 이벤트
+				// 업스크롤 이벤트 발생
+			else {
+				//console.log("up-scroll");
+				if($(window).scrollTop() <= 0){
+					
+					let addList = "";
+					let firstbno = $(".scrolling:first").attr("data-bno");
+					console.log(firstbno);
+					
+					
+					
+					
+				}	// if ($(window).scrollTop() <= 0)
+				
+			} // else
+
 		});
-		
-		
-		
-		
-		
-		
-		
+
 		
 	});
-
-
 </script>
-
 <body>
 
 
 	<h1>board</h1>
-	<div>
+	<div align="center"><img src="../img/고래nb.png" width="80%"></div>
+	<div align="center">
 		<table>
 			<thead>
-				<tr class="row">
-					<th class="col-1">번호</th>
-					<th class="col-6">제목</th>
-					<th class="col-2">글쓴이</th>
-					<th class="col-2">날짜</th>
-					<th class="col-1">조회수</th>
+				<tr class="scrollLocation">
+					<th>번호</th>
+					<th>제목</th>
+					<th>글쓴이</th>
+					<th>날짜</th>
+					<th>읽음</th>
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach items="${list }" var="list">
-					<tr style="height: 50px;">
-						<td class="col-1">${list.bno }</td>
-						<td class="col-6">${list.btitle }</td>
-						<td class="col-2">${list.content }</td>
-						<td class="col-2">${list.bdate}</td>
-						<td class="col-1">${list.blike}</td>
+				<c:forEach items="${list}" var="list">
+					<tr style="height: 50px;" class="listToChange">
+						<td class="scrolling" data-bno="${list.bno}">${list.bno }</td>
+						<td class="title">${list.btitle }</td>
+						<td>${list.m_name }</td>
+						<td>${list.bdate }</td>
+						<td>${list.blike }</td>
 					</tr>
 				</c:forEach>
 			</tbody>
-
 		</table>
 	</div>
 </body>

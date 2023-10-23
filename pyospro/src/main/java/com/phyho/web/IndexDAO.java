@@ -14,4 +14,6 @@ public interface IndexDAO {
 
 	List<Map<Object, String>> boardList();
 
+	List<Map<String, Object>> moreList(Integer bno);
+
 }

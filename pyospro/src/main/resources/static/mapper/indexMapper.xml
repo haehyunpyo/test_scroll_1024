@@ -7,6 +7,15 @@
 	</select>
 
 	<select id="boardList" resultType="Map">
-		SELECT * FROM boardview ORDER BY bno DESC LIMIT 20
+		SELECT * FROM boardview ORDER BY bno DESC LIMIT 0, 50
 	</select>
+
+	<select id="moreList" parameterType="Integer" resultType="Map">
+		<![CDATA[ 
+			SELECT * FROM boardview 
+			WHERE bno < #{bno} and bno > #{bno}-50
+			ORDER BY bno DESC LIMIT 50 
+		]]>
+	</select>
+	
 </mapper>

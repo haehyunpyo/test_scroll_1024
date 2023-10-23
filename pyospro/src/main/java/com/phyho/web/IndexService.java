@@ -19,4 +19,8 @@ public class IndexService {
 	public List<Map<Object, String>> boardList() {
 		return indexDao.boardList();
 	}
+
+	public List<Map<String, Object>> moreList(Integer bno) {
+		return indexDao.moreList(bno);
+	}
 }
