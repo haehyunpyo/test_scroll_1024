@@ -71,9 +71,21 @@ public class IndexController {
 
 		return json.toString();
 	}
-	
 
-	
-	
+	@ResponseBody
+	@PostMapping("scrollUp")
+	public String preList(@RequestParam("bno") Integer bno) {
+		JSONObject json = new JSONObject();
+		// System.out.println("와라bno : " + bno);
+		List<Map<String, Object>> list = indexService.preList(bno);
+		//System.out.println(list);
+		if(list.isEmpty()) {
+			json.put("emptybno", "emptybno");
+			//System.out.println("게시글없음");
+		} 
+		json.put("list", list);
+
+		return json.toString();
+	}
 	
 }

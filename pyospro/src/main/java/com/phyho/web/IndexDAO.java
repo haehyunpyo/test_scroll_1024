@@ -16,4 +16,6 @@ public interface IndexDAO {
 
 	List<Map<String, Object>> moreList(Integer bno);
 
+	List<Map<String, Object>> preList(Integer bno);
+
 }

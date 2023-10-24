@@ -23,4 +23,8 @@ public class IndexService {
 	public List<Map<String, Object>> moreList(Integer bno) {
 		return indexDao.moreList(bno);
 	}
+
+	public List<Map<String, Object>> preList(Integer bno) {
+		return indexDao.preList(bno);
+	}
 }
